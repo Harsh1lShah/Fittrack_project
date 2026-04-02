@@ -4,6 +4,8 @@ import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useMembership } from '../hooks/useMembership';
+import { API_URL } from '../config';
+
 
 const Dashboard = () => {
   const { user, token, logout } = useContext(AuthContext);
@@ -13,7 +15,8 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (token) {
-      axios.get('http://localhost:5000/api/attendance/my-history', { headers: { Authorization: `Bearer ${token}` }})
+      axios.get(`${API_URL}/api/attendance/my-history`, { headers: { Authorization: `Bearer ${token}` }})
+
         .then(res => setHistory(res.data))
         .catch(console.error);
     } else {

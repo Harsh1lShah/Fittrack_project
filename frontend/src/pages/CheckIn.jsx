@@ -3,6 +3,8 @@ import Layout from '../components/Layout';
 import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { API_URL } from '../config';
+
 
 const CheckIn = () => {
   const { user, token } = useContext(AuthContext);
@@ -13,7 +15,8 @@ const CheckIn = () => {
 
   useEffect(() => {
     if (token) {
-      axios.get('http://localhost:5000/api/attendance/my-history', { headers: { Authorization: `Bearer ${token}` }})
+      axios.get(`${API_URL}/api/attendance/my-history`, { headers: { Authorization: `Bearer ${token}` }})
+
         .then(res => {
           const today = new Date().toLocaleDateString();
           const alreadyMarked = res.data.some(item => new Date(item.checkInTime).toLocaleDateString() === today);
@@ -31,10 +34,11 @@ const CheckIn = () => {
   const handleConfirm = async () => {
     try {
       setStatus('Marking attendance...');
-      await axios.post('http://localhost:5000/api/attendance/checkin', {}, {
+      await axios.post(`${API_URL}/api/attendance/checkin`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setStatus('Success! Attendance marked.');
+
       setIsAlreadyMarked(true);
       setTimeout(() => navigate('/dashboard'), 2000);
     } catch (error) {

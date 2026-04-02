@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
+import { API_URL } from '../config';
 
 export const useMembership = () => {
   const { token, user } = useContext(AuthContext);
@@ -9,9 +10,10 @@ export const useMembership = () => {
 
   useEffect(() => {
     if (token && user) {
-      axios.get('http://localhost:5000/api/membership/my-plan', {
+      axios.get(`${API_URL}/api/membership/my-plan`, {
         headers: { Authorization: `Bearer ${token}` }
       })
+
       .then(res => {
         setMembership(res.data);
         setLoading(false);

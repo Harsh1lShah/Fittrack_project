@@ -3,6 +3,8 @@ import { useLocation } from 'react-router-dom';
 import Layout from '../components/Layout';
 import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
+import { API_URL } from '../config';
+
 
 const Chat = () => {
   const { token, user } = useContext(AuthContext);
@@ -34,10 +36,11 @@ const Chat = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post('http://localhost:5000/api/ai/chat', { message: userMessage, trainerName }, {
+      const res = await axios.post(`${API_URL}/api/ai/chat`, { message: userMessage, trainerName }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setMessages(prev => [...prev, { text: res.data.reply, isBot: true }]);
+
     } catch (err) {
       setMessages(prev => [...prev, { text: "Sorry, I'm having trouble connecting to the AI brain.", isBot: true }]);
     }

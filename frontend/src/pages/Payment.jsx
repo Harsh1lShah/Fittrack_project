@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
 import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
+import { API_URL } from '../config';
+
 
 const loadRazorpayScript = () => {
   return new Promise((resolve) => {
@@ -40,10 +42,11 @@ const Payment = () => {
     try {
       // Create Order on backend
       const { data: orderData } = await axios.post(
-        'http://localhost:5000/api/payment/create-order', 
+        `${API_URL}/api/payment/create-order`, 
         { amount: selectedPlan.price * 100 },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+
       
       const options = {
         key: orderData.razorpay_key_id, 
@@ -56,7 +59,7 @@ const Payment = () => {
         handler: async function (response) {
           try {
             await axios.post(
-              'http://localhost:5000/api/payment/verify',
+              `${API_URL}/api/payment/verify`,
               {
                  razorpay_order_id: response.razorpay_order_id,
                  razorpay_payment_id: response.razorpay_payment_id,
@@ -65,6 +68,7 @@ const Payment = () => {
               },
               { headers: { Authorization: `Bearer ${token}` } }
             );
+
             alert(`Payment Successful! Welcome to ${selectedPlan.name}!`);
             navigate('/dashboard');
           } catch(err) {

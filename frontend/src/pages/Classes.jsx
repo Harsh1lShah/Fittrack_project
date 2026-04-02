@@ -4,6 +4,8 @@ import { AuthContext } from '../context/AuthContext';
 import { useMembership } from '../hooks/useMembership';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { API_URL } from '../config';
+
 
 const Classes = () => {
   const { token, user } = useContext(AuthContext);
@@ -14,9 +16,10 @@ const Classes = () => {
 
   const fetchClasses = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/classes', {
+      const res = await axios.get(`${API_URL}/api/classes`, {
         headers: { Authorization: `Bearer ${token}` }
       });
+
       setClasses(res.data);
     } catch (err) {
       console.error(err);
@@ -31,9 +34,10 @@ const Classes = () => {
 
   const handleBook = async (classId) => {
     try {
-      await axios.post(`http://localhost:5000/api/classes/${classId}/book`, {}, {
+      await axios.post(`${API_URL}/api/classes/${classId}/book`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
+
       fetchClasses();
     } catch (err) {
       alert(err.response?.data?.message || 'Failed to book class');
@@ -42,9 +46,10 @@ const Classes = () => {
 
   const handleUnbook = async (classId) => {
     try {
-      await axios.post(`http://localhost:5000/api/classes/${classId}/unbook`, {}, {
+      await axios.post(`${API_URL}/api/classes/${classId}/unbook`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
+
       fetchClasses();
     } catch (err) {
       alert(err.response?.data?.message || 'Failed to unbook class');
